@@ -5,20 +5,23 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LibroController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PrestamoController;
-
+use App\Http\Middleware\IsUserAuth;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
-Route::middleware('auth:api')->group(function () {
+Route::apiResource('libros', LibroController::class)->only(['index', 'show']);
+
+Route::middleware([IsUserAuth::class])->group(function () {
     
-    // Rutas de autenticación
-    Route::get('/user', [AuthController::class, 'authUser']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    
-    // Rutas protegidas
-    Route::apiResource('libros', LibroController::class);
-    Route::apiResource('prestamos', PrestamoController::class);
+  // Rutas de autenticación
+  Route::get('/me', [AuthController::class, 'user']);
+  Route::post('/logout', [AuthController::class, 'logout']);
+  
+  // Rutas protegidas
+  Route::apiResource('libros', LibroController::class)->except(['index', 'show']);
+
+
+  Route::apiResource('prestamos', PrestamoController::class);
 });
- 

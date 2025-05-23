@@ -1,0 +1,30 @@
+<div #modalRef
+     [ngStyle]="{ top: top + 'px' }"
+     class="absolute left-0 w-full z-40 transition-opacity duration-300"
+     [class.opacity-0]="!visible"
+     [class.opacity-100]="visible">
+
+  <div class="max-w-5xl mx-auto bg-black/60 backdrop-blur-lg rounded-xl overflow-hidden shadow-lg p-6 text-white">
+    <div class="relative">
+      <img [src]="libro?.portada" class="absolute inset-0 w-full h-full object-cover opacity-30 z-0" />
+      <div class="relative z-10 space-y-2">
+        <h2 class="text-2xl font-bold">{{ libro?.titulo }}</h2>
+        <p class="text-sm text-gray-300">{{ libro?.autor }}</p>
+        <p class="text-sm text-gray-300">{{ libro?.descripcion || 'Sin descripción' }}</p>
+
+        <ng-container *ngIf="libro?.disponible; else prestamoInfo">
+          <span class="text-green-400 text-xs">✅ Disponible</span>
+        </ng-container>
+        <ng-template #prestamoInfo>
+          <span class="text-red-400 text-xs">❌ No disponible</span>
+          <div *ngIf="prestamo" class="text-xs text-gray-300">
+            Devolución: {{ prestamo.fecha_devolucion | date }}
+          </div>
+        </ng-template>
+
+        <button (click)="cerrar()" class="mt-2 bg-white text-black text-sm px-4 py-1 rounded">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+

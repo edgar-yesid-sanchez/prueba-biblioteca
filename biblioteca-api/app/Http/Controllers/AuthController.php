@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -36,23 +37,27 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-       // Intentar autenticar y generar un token JWT
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Credenciales inválidas'], 401);
-        }
 
-        return response()->json(['token' => $token]);
+       // Intentar autenticar y generar un token JWT
+       try{
+
+           if (!$token = JWTAuth::attempt($credentials)) {
+               return response()->json(['error' => 'Credenciales inválidas'], 401);
+            }   
+            return response()->json(['token' => $token]);
+        }catch (JWTException $e) {
+            return response()->json(['error' => 'No se pudo crear el token'], 500);
+        }
     }
 
-    public function me()
+    public function user()
     {
         return response()->json(Auth::guard('api')->user());
     }
 
     public function logout()
     {
-        Auth::guard('api')->logout();
-
-        return response()->json(['message' => 'Sesión cerrada correctamente']);
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return response()->json(['message' => 'Sesión cerrada correctamente',200    ]);
     }
 }
