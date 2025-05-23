@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -45,4 +46,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    
+    public function getJWTIdentifier()
+    {
+        // Retorna el identificador principal del usuario
+        return $this->getKey(); // Por defecto, retorna el 'id'
+    }
+
+    public function getJWTCustomClaims()
+    {
+        // Retorna datos adicionales que quieras incluir en el token
+        return [];
+    }
+
+    public function prestamos() {
+        return $this->hasMany(Prestamo::class);
+    }
+
 }
