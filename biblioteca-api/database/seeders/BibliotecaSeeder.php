@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Libro;
 use App\Models\Prestamo;
+use Carbon\Carbon;
 
 class BibliotecaSeeder extends Seeder
 {
@@ -47,7 +48,7 @@ class BibliotecaSeeder extends Seeder
 
             Prestamo::create([
                 'user_id' => $usuariosIds[array_rand($usuariosIds)],
-                'libro_id' => $libro->id,
+                'libro_id' => $libros->random()->id,
                 'fecha_prestamo' => now()->toDateString(),
                 'fecha_devolucion' => now()->addDays(7)->toDateString(),
                 'estado' => $estado,
@@ -57,6 +58,19 @@ class BibliotecaSeeder extends Seeder
             if ($estado === 'pendiente') {
                 $libro->update(['disponible' => false]);
             }
+        }
+
+        // Prestamos completados
+        for ($i = 1; $i <= 20; $i++) {
+            $fechaPrestamo = Carbon::now()->subDays(rand(10, 30));
+            $fechaDevolucion = (clone $fechaPrestamo)->addDays(7);
+            Prestamo::create([
+                'user_id' => $usuariosIds[array_rand($usuariosIds)],
+                'libro_id' =>  $libros->random()->id,
+                'fecha_prestamo' => $fechaPrestamo->toDateString(),
+                'fecha_devolucion' => $fechaDevolucion->toDateString(),
+                'estado' => 'entregado',
+            ]);
         }
     }
 }

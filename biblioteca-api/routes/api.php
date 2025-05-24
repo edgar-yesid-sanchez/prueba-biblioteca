@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LibroController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PrestamoController;
+use App\Http\Controllers\MetricaController;
 use App\Http\Middleware\IsUserAuth;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -22,4 +23,6 @@ Route::middleware([IsUserAuth::class])->group(function () {
   // Rutas protegidas
   Route::apiResource('libros', LibroController::class)->except(['index', 'show']);
   Route::apiResource('prestamos', PrestamoController::class);
+
+  Route::get('/metricas', [MetricaController::class, 'resumen']);
 });
