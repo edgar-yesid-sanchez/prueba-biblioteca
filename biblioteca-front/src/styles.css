@@ -3,3 +3,13 @@
 @tailwind utilities; */
 
 @import "tailwindcss";
+
+.input {
+  @apply border border-gray-300 rounded px-3 py-2 text-sm;
+}
+.btn-primary {
+  @apply bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 transition cursor-pointer;
+}
+.btn-secondary {
+  @apply bg-gray-200 text-black text-sm hover:bg-gray-300 transition cursor-pointer;
+}

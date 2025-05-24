@@ -10,8 +10,8 @@ use App\Http\Middleware\IsUserAuth;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-
 Route::apiResource('libros', LibroController::class)->only(['index', 'show']);
+Route::get('/libros/{id}/ultimoPrestamo', [PrestamoController::class, 'ultimoPrestamo']);
 
 Route::middleware([IsUserAuth::class])->group(function () {
     
@@ -21,7 +21,5 @@ Route::middleware([IsUserAuth::class])->group(function () {
   
   // Rutas protegidas
   Route::apiResource('libros', LibroController::class)->except(['index', 'show']);
-
-
   Route::apiResource('prestamos', PrestamoController::class);
 });

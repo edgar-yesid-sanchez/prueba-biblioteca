@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LibrosService } from '../../services/libros.service';
 import { ApiService } from '../../services/api.service';
-import { LibroDetalleModalComponent } from '../libro-detalle-modal/libro-detalle-modal.component';
+import { LibroDetalleModalComponent } from '../../components/libro-detalle-modal/libro-detalle-modal.component';
 
 @Component({
   selector: 'app-library',
@@ -30,7 +30,10 @@ export class LibraryComponent implements OnInit {
 
   
   ngOnInit(): void {
-    this.librosService.getAll()
+    this.cargarLibros();
+  }
+  cargarLibros() {
+     this.librosService.getAll()
       .then(async (data) => {
         this.libros = data;
         this.cargando = false;
@@ -50,25 +53,21 @@ export class LibraryComponent implements OnInit {
   }
 
   seleccionarLibro(libro: any, event: MouseEvent) {
- const target = event.currentTarget as HTMLElement;
-  this.libroSeleccionado = libro;
+  const target = event.currentTarget as HTMLElement;
+    this.libroSeleccionado = libro;
 
-  if (!libro.disponible) {
-    this.api.request('prestamos').then(prestamos => {
-      const ult = prestamos
-        .filter((p: any) => p.libro_id === libro.id)
-        .sort((a:any, b: any) => new Date(b.fecha_prestamo).getTime() - new Date(a.fecha_prestamo).getTime())[0];
-
-      this.ultimoPrestamoLibroSeleccionado = ult;
+    if (!libro.disponible) {
+      this.api.request(`libros/${libro.id}/ultimoPrestamo`).then(prestamo => {
+        this.ultimoPrestamoLibroSeleccionado = prestamo;
+        this.stickyModal.libro = libro;
+        this.stickyModal.prestamo = prestamo;
+        this.stickyModal.abrirDebajoDe(target);
+      });
+    } else {
       this.stickyModal.libro = libro;
-      this.stickyModal.prestamo = ult;
+      this.stickyModal.prestamo = null;
       this.stickyModal.abrirDebajoDe(target);
-    });
-  } else {
-    this.stickyModal.libro = libro;
-    this.stickyModal.prestamo = null;
-    this.stickyModal.abrirDebajoDe(target);
-  }
+    }
   }
 
   cerrarModal() {

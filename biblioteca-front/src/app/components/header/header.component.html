@@ -1,24 +1,37 @@
-<header class="fixed w-full top-0 bg-gray-800">
+<header class="fixed w-full top-0 bg-gray-800 z-10">
 
   <section class="flex items-center justify-between px-4 py-2 shadow-md rounded-b-2xl max-w-4xl mx-auto mt-2">
 
-    <div class="text-xl font-bold text-cyan-50">📚 Biblioteca</div>
+    <div class="flex">
+      <a class="text-xl font-bold text-cyan-50" href="/">
+        📚 Biblioteca
+      </a>
+      <a class="text-lg font-semibold text-cyan-50 ml-10" *ngIf="user" href="/prestamos">
+        Prestamos
+      </a>
+      <a class="text-lg font-semibold text-cyan-50 ml-10" *ngIf="user" href="/gestionarLibros">
+        Gestionar libros
+      </a>
+    </div>
   
     <div class="flex gap-4 items-center">
       <!-- Usuario autenticado -->
       <ng-container *ngIf="user; else notLoggedIn">
         <span class="text-sm text-cyan-50">👋 {{ user.name }}</span>
-        <button (click)="logout()" class="px-4 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
+        <button (click)="logout()" class="px-4 py-1 bg-amber-500 text-white text-sm rounded hover:bg-amber-600">
           Salir
         </button>
       </ng-container>
   
       <!-- No autenticado -->
       <ng-template #notLoggedIn>
-        <a routerLink="/login" class="px-4 py-1 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 transition cursor-pointer">Ingresar</a>
-        <a routerLink="/register"class="px-4 py-1 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 transition cursor-pointer">Registro</a>
+        <button (click)="showLogin = true" class="btn-primary px-4 py-1 rounded-lg">Ingresar</button>
+        <button (click)="showRegister = true" class="btn-primary px-4 py-1 rounded-lg">Registro</button>
       </ng-template>
     </div>
   </section>
 
 </header>
+
+<app-login-modal [visible]="showLogin" (onClose)="showLogin = false" (onLogin)="handleLogin($event)"></app-login-modal>
+<app-register-modal [visible]="showRegister" (onClose)="showRegister = false" (onLogin)="handleRegister($event)"></app-register-modal>

@@ -1,0 +1,84 @@
+<main class=" max-w-4xl mx-auto mt-[52px]">
+  <section class="max-w-6xl mx-auto p-6">
+    <div class="flex justify-between mb-4">
+      <h2 class="text-2xl font-bold text-gray-800 ">Gestión de Libros</h2>
+      <button (click)="verFormAgregarLibro = !verFormAgregarLibro" class="btn-primary px-4 py-1 rounded-lg">
+        Cargar Libros
+      </button>
+    </div>
+
+    <div *ngIf="libros.length === 0" class="text-gray-800 ">
+      No hay libros registrados.
+    </div> 
+
+    <!-- Form para agregar libro -->
+
+    <section *ngIf="verFormAgregarLibro == true" class="mb-4 bg-gray-200 p-4 rounded">
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">Agregar Libro</h3>
+      <p class="text-sm text-gray-600">Completa los campos para agregar un nuevo libro.</p>
+
+      <form [formGroup]="formLibro" (ngSubmit)="crear()" class=" grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div>
+          <input type="text" formControlName="titulo" placeholder="Título" class="input w-full" />
+          <div *ngIf="formLibro.get('titulo')?.invalid && formLibro.get('titulo')?.touched" class="text-xs text-red-500">Requerido</div>
+        </div>
+        <div>
+          <input type="text" formControlName="autor" placeholder="Autor" class="input w-full" />
+          <div *ngIf="formLibro.get('autor')?.invalid && formLibro.get('autor')?.touched" class="text-xs text-red-500">Requerido</div>
+        </div>
+        <div>
+          <input type="text" formControlName="genero" placeholder="Género" class="input w-full" />
+          <div *ngIf="formLibro.get('genero')?.invalid && formLibro.get('genero')?.touched" class="text-xs text-red-500">Requerido</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-sm">Disponible</label>
+          <input type="checkbox" formControlName="disponible" />
+          <button type="submit" class="btn-primary ml-auto  px-4 py-1 rounded-lg" [disabled]="formLibro.invalid">Agregar</button>
+        </div>
+      </form>
+    </section>
+
+
+
+    <table class="w-full text-sm border border-gray-300 br-gray-200 rounded-lg shadow-md overflow-hidden">
+      <thead class="bg-gray-200 text-left">
+        <tr>
+          <th class="p-2">Título</th>
+          <th class="p-2">Autor</th>
+          <th class="p-2">Género</th>
+          <th class="p-2">Disponible</th>
+          <th class="p-2 flex justify-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="bg-gray-200">
+        <tr *ngFor="let libro of libros" class="border-t p-2  hover:bg-gray-100 ">
+          <td class="p-2">
+            <input *ngIf="modoEdicion[libro.id]" [(ngModel)]="libro.titulo" class="input w-full" />
+            <span *ngIf="!modoEdicion[libro.id]">{{ libro.titulo }}</span>
+          </td>
+          <td class="p-2">
+            <input *ngIf="modoEdicion[libro.id]" [(ngModel)]="libro.autor" class="input w-full" />
+            <span *ngIf="!modoEdicion[libro.id]">{{ libro.autor }}</span>
+          </td>
+          <td class="p-2">
+            <input *ngIf="modoEdicion[libro.id]" [(ngModel)]="libro.genero" class="input w-full" />
+            <span *ngIf="!modoEdicion[libro.id]">{{ libro.genero }}</span>
+          </td>
+          <td class="p-2">
+            <input *ngIf="modoEdicion[libro.id]" type="checkbox" [(ngModel)]="libro.disponible" />
+            <span *ngIf="!modoEdicion[libro.id]">
+              <span [ngClass]="libro.disponible ? 'text-cyan-600 font-semibold' : 'text-amber-600 font-semibold'">
+                {{ libro.disponible ? 'Sí' : 'No' }}
+              </span>
+            </span>
+          </td>
+          <td class="p-2 space-x-2 flex justify-end">
+            <button *ngIf="!modoEdicion[libro.id]" class="px-2 py-0.5 rounded text-xs bg-cyan-600 text-cyan-50 cursor-pointer" (click)="modoEdicion[libro.id] = true">Editar</button>
+            <button *ngIf="modoEdicion[libro.id]" class="px-2 py-0.5 rounded text-xs bg-teal-600 text-teal-50 cursor-pointer" (click)="guardar(libro)">Guardar</button>
+            <button class="px-2 py-0.5 rounded text-xs bg-amber-600 text-amber-50 cursor-pointer" (click)="eliminar(libro.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>

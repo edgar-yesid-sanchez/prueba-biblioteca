@@ -10,15 +10,24 @@
 
   <main class="max-w-4xl min-h-10 px-4 mx-auto">
 
-    <div class="relative mx-auto p-4 rounded-xl bg-gray-50 overflow-hidden shadow-lg p-6 text-white">
+    <div class="relative mx-auto p-4 rounded-xl bg-gradient-to-t from-gray-200 to-gray-100 overflow-hidden shadow-lg p-6 text-white">
+      <!-- Imgen fondo -->
       <img
         [src]="'https://picsum.photos/seed/' + libro?.titulo + '/300/450'"
-        class="absolute left-1/2 top-0 -translate-x-1/2 w-2xl  object-contain z-0"
+        class="absolute left-2/2 top-0 -translate-x-2/2 w-auto object-contain z-2"
         alt="Portada" />
 
-      <div class="absolute z-0 inset-0 z-10 bg-gradient-to-t from-gray-100 via-gray-50/90 to-transparent"></div>
+      <!-- Degradado -->
+      <div class="absolute z-1 inset-0 z-10 bg-gradient-to-t from-gray-200 to-transparent"></div>
 
+      <!-- Cerrar modal -->
+      <button (click)="cerrar()" class="absolute top-4 right-4 z-99 cursor-poiter">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 font-bold text-white hover:text-gray-200 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
      
+      <!-- Informacion del libro -->
       <div class="relative z-10">
         <div class="relative z-10 space-y-2">
           <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ libro?.titulo }}</h2>
@@ -30,7 +39,7 @@
           <ng-container *ngIf="libro?.disponible; else prestamoInfo">
             <section class="flex flex-col mt-4">
               <p class="text-cyan-800 text-sm font-semibold mb-2">Libro disponible</p>
-              <button class="px-4 p-2 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 transition cursor-pointer w-max ">
+              <button class="btn-primary px-4 p-2 rounded-lg w-max" (click)="crearPrestamo = true">
                 Solicitar Prestamo   
               </button>
             </section>
@@ -38,19 +47,29 @@
 
           <ng-template #prestamoInfo>
             <span class="text-amber-400 text-sm font-semibold mb-2">No disponible</span>
-            <div *ngIf="prestamo" class="text-xs text-gray-300">
-              Devolución: {{ prestamo.fecha_devolucion | date }}
+            <div *ngIf="prestamo" class="text-xs text-gray-400">
+              Se devolvera: {{ prestamo.fecha_devolucion | date }}
             </div>
           </ng-template>
+
+
+          <!-- RealizarPrestamo -->
+          <section *ngIf="crearPrestamo" class="mt-4 p-2 rounded shadow">
+            <p class="text-sm text-gray-700">
+              Este préstamo es por 7 días <br /> <br />
+              <strong>Desde:</strong> {{ fechaPrestamo | date:'longDate' }} <br />
+              <strong>Hasta:</strong> {{ fechaDevolucion | date:'longDate' }}
+            </p>
+            <div class="mt-3 flex justify-end gap-2">
+              <button class="btn-secondary px-4 p-2 rounded-lg" (click)="crearPrestamo = false">Cancelar</button>
+              <button class="btn-primary px-4 p-2 rounded-lg" (click)="confirmarPrestamo()">Confirmar</button>
+            </div>
+          </section>
 
         </div>
        
       </div>
-        <button (click)="cerrar()" class="absolute top-4 right-4 z-99 cursor-poiter">
-         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold text-gray-800 hover:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+     
     </div>
 
   </main>
