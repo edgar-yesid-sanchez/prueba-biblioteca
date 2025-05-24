@@ -9,8 +9,11 @@
       <a class="text-lg font-semibold text-cyan-50 ml-10" *ngIf="user" href="/prestamos">
         Prestamos
       </a>
-      <a class="text-lg font-semibold text-cyan-50 ml-10" *ngIf="user" href="/gestionarLibros">
+      <a class="text-lg font-semibold text-cyan-50 ml-10" *ngIf="user?.role === 'admin'" href="/gestionarLibros">
         Gestionar libros
+      </a>
+      <a class="text-lg font-semibold text-cyan-50 ml-10" *ngIf="user?.role === 'admin' " href="/metricas">
+        Metricas
       </a>
     </div>
   

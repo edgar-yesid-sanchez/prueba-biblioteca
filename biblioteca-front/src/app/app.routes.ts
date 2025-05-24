@@ -15,6 +15,10 @@ export const routes: Routes = [
     canActivate: [RoleGuard(['admin'])],
     loadComponent:() => import('./pages/gestionar-libros/gestionar-libros.component').then(m => m.GestionarLibrosComponent)
   },
+  { path: 'metricas',
+    canActivate: [RoleGuard(['admin'])],
+    loadComponent:() => import('./pages/metricas/metricas.component').then(m => m.MetricasComponent)
+  },
 
 
 ];

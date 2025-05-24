@@ -1,0 +1,66 @@
+<div *ngIf="cargando" class="bg-white p-4 shadow rounded-lg mt-10">
+  <p class="text-3xl font-bold text-cyan-600">Cargando</p>
+</div>
+<section *ngIf="!cargando" class="max-w-6xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-6">Métricas de prestamos</h2>
+
+
+  <!-- Tarjetas resumen -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-4 shadow rounded-lg">
+      <h3 class="text-sm text-gray-500 mb-1">Total Préstamos realizados</h3>
+      <p class="text-3xl font-bold text-cyan-600">{{ total }}</p>
+    </div>
+    <div class="bg-white p-4 shadow rounded-lg">
+      <h3 class="text-sm text-gray-500 mb-1">Libros Prestados Actualmente</h3>
+      <p class="text-3xl font-bold text-yellow-600">{{ prestamosActivos }}</p>
+    </div>
+    <div class="bg-white p-4 shadow rounded-lg">
+      <h3 class="text-sm text-gray-500 mb-1">Préstamos Entregados</h3>
+      <p class="text-3xl font-bold text-green-600">{{ entregados }}</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Libro más solicitado -->
+    <div class="bg-white p-4 mb-6 shadow rounded-lg col-span-1  h-fit">
+      <h3 class="text-lg font-semibold mb-2">📚 Libro más solicitado</h3>
+      <div *ngIf="libroMasSolicitado">
+        <p class="text-2xl font-bold  text-cyan-700 mb-4">{{ libroMasSolicitado.libro?.titulo }}</p>
+        <img  [src]="'https://picsum.photos/seed/' + libroMasSolicitado.libro?.titulo + '/300/450'"  class="w-full aspect-[3/4] object-cover rounded-xl" />
+        <p class="text-sm text-gray-600 font-semibold mt-4">Total préstamos: {{ libroMasSolicitado.total }}</p>
+        <p class="text-sm text-gray-600 font-semibold mt-4">Actuamente esta: 
+          <ng-container *ngIf="libroMasSolicitado?.disponible; else disponibilidad">
+            <p class="text-cyan-800 text-xs font-semibold">Disponible</p>
+          </ng-container>
+          <ng-template #disponibilidad>
+            <p class="text-amber-400 text-xs font-semibold">No disponible</p>
+          </ng-template>
+        </p>
+      </div>
+      <div *ngIf="!libroMasSolicitado" class="text-gray-500">No hay datos disponibles.</div>
+    </div>
+  
+    <!-- Ranking -->
+    <div class="bg-white p-4 shadow rounded-lg col-span-1 md:col-span-2">
+      <h3 class="text-lg font-semibold mb-4">Ranking de libros más prestados</h3>
+      <table class="w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="text-left p-2">#</th>
+            <th class="text-left p-2">Título</th>
+            <th class="text-left p-2">Cantidad de préstamos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let libro of ranking; let i = index" class="border-t">
+            <td class="p-2">{{ i + 1 }}</td>
+            <td class="p-2">{{ libro.libro?.titulo }}</td>
+            <td class="p-2 font-bold text-gray-700">{{ libro.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
